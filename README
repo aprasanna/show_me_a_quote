@@ -1,0 +1,12 @@
+This is a simple requests API based application. It fetches a quote, one per day, 
+from forismatic and displays it in the terminal.
+
+Setup and install:
+
+1) python3 setup.py install
+2) from show_me_a_quote import quote
+3) quote.quote()
+
+Notes:
+1) Requires python3 to run
+2) Currently only linux platform is supported
