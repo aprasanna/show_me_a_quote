@@ -16,8 +16,8 @@ def quote():
     quotes_api_link = "http://api.forismatic.com/api/1.0/?"
     quotes_api_options = "method=getQuote&lang="+"en"+"&format=json"
     with shelve.open('show_me_a_quote.db') as quote_db:
-        print('{}'.format('\n'))
-        if (('curr_date' not in quote_db) or (quote_db['curr_date'] == curr_date)):
+        print('\n')
+        if (('curr_date' not in quote_db) or (quote_db['curr_date'] != curr_date)):
             response = requests.get((('{}{}').format(
                 quotes_api_link, quotes_api_options)))
             try:
@@ -33,4 +33,4 @@ def quote():
             quote_db['quote'] = quote
             quote_db['author'] = author
         print(textwrap.fill(quote_db['quote'], width=80))
-        print('{}{}{}'.format('- ', quote_db['author'], '\n'))
+        print('- {}'.format(quote_db['author']))
