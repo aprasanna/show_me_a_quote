@@ -12,7 +12,6 @@ colorama_init(autoreset=True)
 
 CHAR_LIMIT_FOR_QUOTE = 80
 
-curr_date = datetime.now().strftime("%Y-%m-%d")
 quotes_api_link = "http://api.forismatic.com/api/1.0/?"
 quotes_api_options = "method=getQuote&lang="+"en"+"&format=json"
 
@@ -30,6 +29,7 @@ def fetch_quote():
 
 def check_and_update_db(quote_db):
     ''' Check if db needs to be created or updated and perform an appropriate task '''
+    curr_date = datetime.now().strftime("%Y-%m-%d")
     if (('curr_date' not in quote_db) or (quote_db['curr_date'] != curr_date)):
         response = fetch_quote()
         try:
