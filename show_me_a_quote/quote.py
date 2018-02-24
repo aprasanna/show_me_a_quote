@@ -7,13 +7,20 @@ import requests
 from datetime import datetime
 import shelve
 import textwrap
+import sys
 
 colorama_init(autoreset=True)
 
 CHAR_LIMIT_FOR_QUOTE = 80
 
-quotes_api_link = "http://api.forismatic.com/api/1.0/?"
-quotes_api_options = "method=getQuote&lang="+"en"+"&format=json"
+quotes_api_link = "http://api.forismatic.com/api/1.0/?method=getQuote"
+quotes_api_options = dict(zip(("lang", "format"), ("en", "json")))
+
+
+def print_error_and_exit(msg):
+    ''' Print error message and exit '''
+    print(Fore.RED + msg)
+    sys.exit(1)
 
 
 def print_quote(quote, author):
@@ -24,7 +31,10 @@ def print_quote(quote, author):
 
 def fetch_quote():
     ''' Fetches and returns a new quote '''
-    return requests.get((('{}{}').format(quotes_api_link, quotes_api_options)))
+    try:
+        return requests.get(quotes_api_link, params=quotes_api_options)
+    except Exception as ex:
+        print_error_and_exit('Requests get method failed!')
 
 
 def check_and_update_db(quote_db):
@@ -35,8 +45,7 @@ def check_and_update_db(quote_db):
         try:
             responseJson = json.loads(response.text.replace('\\', ''))
         except Exception as ex:
-            print(Fore.RED + 'Unable to fetch quote! Please try again %r' % ex)
-            raise
+            print_error_and_exit("Unable to decode output\n")
         author = responseJson['quoteAuthor']
         quote = responseJson['quoteText']
         if not (author):
